@@ -66,7 +66,7 @@ public class ProfileServiceImpl implements ProfileService {
             file.transferTo(filePath.toFile());
 
             // Simulasi URL hasil upload
-            String imageUrl = "https://yoururlapi.com/" + fileName;
+            String imageUrl = "https://test-praktek-api-programmer-production.up.railway.app" + fileName;
 
             user.setProfile_image(imageUrl);
             userRepository.save(user);
