@@ -2,14 +2,18 @@ package com.example.thtbp.util;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+import javax.crypto.SecretKey;
+
 @Component
 public class JwtUtil {
 
-    private static final String SECRET_KEY = "1234567890"; 
+    private static final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);; 
     private static final long EXPIRATION_TIME = 12 * 60 * 60 * 1000; // 12 jam
 
     public String generateToken(String email) {

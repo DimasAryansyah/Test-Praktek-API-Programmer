@@ -11,5 +11,4 @@ import java.util.List;
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 @Query(value = "SELECT * FROM transactions WHERE user_id = :userId ORDER BY created_on DESC", nativeQuery = true)
     List<Transaction> findAllByUserId(@Param("userId") Long userId);
-    List<Transaction> findByUser_UserIdOrderByCreated_onDesc(Long userId);
 }

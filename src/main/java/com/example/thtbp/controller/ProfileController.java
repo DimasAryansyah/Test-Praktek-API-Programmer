@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/profile")
+@RequestMapping("/api/v1/profile")
 @RequiredArgsConstructor
 public class ProfileController {
 
@@ -20,6 +20,7 @@ public class ProfileController {
 
     @GetMapping
     public ResponseEntity<?> getProfile(Principal principal) {
+        System.out.println("Principal: " + principal);
         ProfileResponse data = profileService.getProfile(principal.getName());
         Map<String, Object> response = new HashMap<>();
         response.put("status", 0);

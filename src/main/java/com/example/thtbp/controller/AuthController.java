@@ -1,5 +1,6 @@
 package com.example.thtbp.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.example.thtbp.entity.User;
@@ -18,25 +19,47 @@ public class AuthController {
 
     @PostMapping("/registration")
     public Map<String, Object> register(@RequestBody User user) {
-        if (userRepository.existsByEmail(user.getEmail())) {
-            return Map.of("status", 102, "message", "Email already registered");
-        }
+        Map<String, Object> response = new HashMap<>();
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+    if (userRepository.existsByEmail(user.getEmail())) {
+        response.put("status", 102);
+        response.put("message", "Email sudah terdaftar");
+        response.put("data", null);
+        return response;
+    }
 
-        return Map.of("status", 0, "message", "Registration success", "data", user);
+    user.setPassword(passwordEncoder.encode(user.getPassword()));
+    userRepository.save(user);
+
+    response.put("status", 0);
+    response.put("message", "Registrasi berhasil silahkan login");
+    response.put("data", null);
+
+    return response;
     }
 
     @PostMapping("/login")
     public Map<String, Object> login(@RequestBody User req) {
+        Map<String, Object> response = new HashMap<>();
+
         User user = userRepository.findByEmail(req.getEmail()).orElse(null);
 
         if (user == null || !passwordEncoder.matches(req.getPassword(), user.getPassword())) {
-            return Map.of("status", 103, "message", "Invalid email or password");
+            response.put("status", 103);
+            response.put("message", "Email atau password salah");
+            response.put("data", null);
+            return response;
         }
 
         String token = jwtUtil.generateToken(user.getEmail());
-        return Map.of("status", 0, "message", "Login success", "data", Map.of("token", token));
+        Map<String, Object> data = new HashMap<>();
+        data.put("token", token);
+
+        response.put("status", 0);
+        response.put("message", "Login berhasil");
+        response.put("data", data);
+
+        return response;
     }
+
 }

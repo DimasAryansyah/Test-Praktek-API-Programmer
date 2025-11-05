@@ -58,7 +58,7 @@ public class ProfileServiceImpl implements ProfileService {
         }
 
         try {
-            String uploadDir = "uploads/profile/";
+            String uploadDir = System.getProperty("user.dir") + "/uploads/profile/";
             Files.createDirectories(Paths.get(uploadDir));
 
             String fileName = email.replaceAll("@", "_") + "_" + file.getOriginalFilename();

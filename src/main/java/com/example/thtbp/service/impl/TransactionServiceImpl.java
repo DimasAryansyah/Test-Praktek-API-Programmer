@@ -32,19 +32,18 @@ public class TransactionServiceImpl implements TransactionService {
         if (user == null) {
             throw new RuntimeException("User tidak ditemukan");
         }
-
-        Balance balance = balanceRepository.findByUserId(user.getUserId());
-        if (balance == null || balance.getBalance() < request.getTotal_amount()) {
-            throw new RuntimeException("Saldo tidak cukup");
-        }
-
         ServiceEntity service = serviceRepository.findByServiceCode(request.getService_code());
         if (service == null) {
             throw new RuntimeException("Service tidak ditemukan");
         }
 
+        Balance balance = balanceRepository.findByUserId(user.getUserId());
+        if (balance == null || balance.getBalance() < service.getService_tariff()) {
+            throw new RuntimeException("Saldo tidak cukup");
+        }
+
         // kurangi saldo
-        balance.setBalance(balance.getBalance() - request.getTotal_amount());
+        balance.setBalance(balance.getBalance() - service.getService_tariff());
         balanceRepository.save(balance);
 
         // simpan transaksi
@@ -52,7 +51,7 @@ public class TransactionServiceImpl implements TransactionService {
         trx.setUser(user);
         trx.setTransaction_type("PAYMENT");
         trx.setDescription(service.getService_name());
-        trx.setTotal_amount(request.getTotal_amount());
+        trx.setTotal_amount(service.getService_tariff());
         trx.setInvoice_number("INV" + System.currentTimeMillis());
         trx.setCreated_on(LocalDateTime.now());
         transactionRepository.save(trx);
